@@ -31,7 +31,7 @@
      :else (do (println (str "Please answer " this " or " that)) (recur [this that])))))
 
 (defn y-or-n []
-  "Return true on y, false on n. On most any other answer, prompt for y or n."
+  "Return true on y__, false on n___. On most any other answer, prompt for y or n. Will Smith Support added."
   (let [answer (str/lower-case (read-line))]
     (cond
      (= (re-find #"^y" answer) "y") true
@@ -40,7 +40,7 @@
      :else (do (println "Please answer y or n") (recur)))))
 
 (defn input-scale [[min max]]
-  "Takes a vector of minimum and maximum values (Integers) of input."
+  "Takes a vector of minimum and maximum values (integers) of input."
   (let [answer (try (Integer/parseInt (read-line)) (catch Exception e (dec min)))]
     (if (and (>= answer min) (<= answer max))
       answer
@@ -65,27 +65,28 @@
   (println (str prompt " (y/n)"))
   (y-or-n))
 
-(defn get-input [category prompt & validation]
+(defn get-input [category prompt & [validator arg-vec]]
   "Bind result of ask-category to a var and use it as the category field to group questions.
    If the question should be asked regardless of any particular category answer, set category to true.
    Can be passed optional keyword (and sometimes vector of arguments) to determine input type.
    :y-or-n makes the question only accept y or n.
-   :this-or-that only accepts the strings you put in the vector. (e.g. [\"Robot\" \"Man\"]
+   :this-or-that only accepts the strings you put in the vector. (e.g. ['Man' 'Machine'])
    :scale only accepts answers between min and max in supplied vector. (e.g. [1 10])
    :date only accepts numbers in format of MM/DD/YYYY"
   (if category
     (do (println prompt)
-        (case (first validation)
+        (case validator
           :y-or-n (y-or-n)
-          :this-or-that (this-or-that (first (rest validation)))
-          :scale (input-scale (first (rest validation)))
+          :this-or-that (this-or-that arg-vec)
+          :scale (input-scale arg-vec)
           :date (input-date)
           nil (no-comma (read-line))))))
 
 (defn prompt []
   "Add data to CSV file as long as user answers y or yes to Add another?
    To add additional fields be sure that the order of the headers and the
-   order of the variables in add-to-file are the same."
+   order of the variables in add-to-file are the same. Headers are only added
+   when file doesn't exist."
   (add-headers? "data" ["Date" "Mood" "Miles Driven"
                         "Books Name" "Number of Pages"
                         "Movie Seen" "Home/Theater" "Movie Seen Alone?"
