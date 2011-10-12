@@ -28,23 +28,24 @@
     (cond
      (= answer (str/lower-case this)) (no-comma this)
      (= answer (str/lower-case that)) (no-comma that)
-     :else (do (println (str "Please answer " this " or " that)) (recur [this that])))))
+     :else (do (println (str "Please answer " this " or " that ".")) (recur [this that])))))
 
 (defn y-or-n []
-  "Return true on y__, false on n___. On most any other answer, prompt for y or n. Will Smith Support added."
+  "Return true on y__, false on n__. On most any other answer, prompt for y or n.
+   Will Smith Support added."
   (let [answer (str/lower-case (read-line))]
     (cond
      (= (re-find #"^y" answer) "y") true
      (= (re-find #"^n" answer) "n") false
      (= answer "aw hell naw!") false
-     :else (do (println "Please answer y or n") (recur)))))
+     :else (do (println "Please answer y or n.") (recur)))))
 
 (defn input-scale [[min max]]
   "Takes a vector of minimum and maximum values (integers) of input."
   (let [answer (try (Integer/parseInt (read-line)) (catch Exception e (dec min)))]
     (if (and (>= answer min) (<= answer max))
       answer
-      (do (println (str "Please enter an integer between " min " and " max))
+      (do (println (str "Please enter an integer between " min " and " max "."))
           (recur [min max])))))
 
 (defn input-date []
@@ -112,7 +113,7 @@
                            bookname pagenum
                            movietitle movieloc moviealone
                            bgamename bgametime])
-      (println "Add another? (y or n)")
+      (println "Add another? (y/n)")
       (if (y-or-n)
         (recur)
         (println "No more entries? Go forth and do more stuff then hurry back and tell me. GO!")))))
