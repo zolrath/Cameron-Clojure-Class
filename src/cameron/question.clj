@@ -5,34 +5,37 @@
   (:use     [date-clj]))
 
 (defn add-headers? [filename headers]
-  "Checks to see if file exists, if not, add each element of headers vector."
+  "Checks to see if file exists. If not, add each element of headers vector to
+   initialize the file."
   (let [filecsv (io/file (str filename ".csv"))]
     (if (false? (.exists filecsv))
       (with-open [file (io/writer filecsv)]
         (spit file (str/join "," (conj headers \newline)))))))
 
 (defn add-to-file [filename data]
-  "Appends all elements in a given vector of data to a CSV file of given name."
+  "Appends all elements in data vector to a CSV file of given name."
   (let [filecsv (io/file (str filename ".csv"))]
     (with-open [file (io/writer filecsv :append true)]
       (spit file (str/join "," (conj data \newline))))))
 
+(defn no-comma [input]
+  "Replaces all , in input with ; to maintain CSV ordering."
+  (str/replace input "," ";"))
+
 (defn this-or-that [[this that]]
-  "Takes a vector with two choices (strings) and will only accept either choice as the answer."
+  "Takes a vector with two choices (strings) and only accepts one of them as the answer.."
   (let [answer (str/lower-case (read-line))]
     (cond
-     (= answer (str/lower-case this)) this
-     (= answer (str/lower-case that)) that
+     (= answer (str/lower-case this)) (no-comma this)
+     (= answer (str/lower-case that)) (no-comma that)
      :else (do (println (str "Please answer " this " or " that)) (recur [this that])))))
 
 (defn y-or-n []
   "Return true on y, false on n. On most any other answer, prompt for y or n."
   (let [answer (str/lower-case (read-line))]
     (cond
-     (= answer "y") true
-     (= answer "yes") true
-     (= answer "n") false
-     (= answer "no") false
+     (= (re-find #"^y" answer) "y") true
+     (= (re-find #"^n" answer) "n") false
      (= answer "aw hell naw!") false
      :else (do (println "Please answer y or n") (recur)))))
 
@@ -63,12 +66,12 @@
   (y-or-n))
 
 (defn get-input [category prompt & validation]
-  "Bind result of ask-category to a var and use it as the category field if the
-   question must be asked regardless of category answer, set category to true.
-   Can be passed optional keyword to determine input type.
+  "Bind result of ask-category to a var and use it as the category field to group questions.
+   If the question should be asked regardless of any particular category answer, set category to true.
+   Can be passed optional keyword (and sometimes vector of arguments) to determine input type.
    :y-or-n makes the question only accept y or n.
-   :this-or-that only accepts varibles in supplied vector.
-   :scale only accepts answers between min and max in supplied vector.
+   :this-or-that only accepts the strings you put in the vector. (e.g. [\"Robot\" \"Man\"]
+   :scale only accepts answers between min and max in supplied vector. (e.g. [1 10])
    :date only accepts numbers in format of MM/DD/YYYY"
   (if category
     (do (println prompt)
@@ -77,7 +80,7 @@
           :this-or-that (this-or-that (first (rest validation)))
           :scale (input-scale (first (rest validation)))
           :date (input-date)
-          nil (read-line)))))
+          nil (no-comma (read-line))))))
 
 (defn prompt []
   "Add data to CSV file as long as user answers y or yes to Add another?
@@ -111,4 +114,4 @@
       (println "Add another? (y or n)")
       (if (y-or-n)
         (recur)
-        (println "All done! Have a Camazing day!")))))
+        (println "No more entries? Go forth and do more stuff then hurry back and tell me. GO!")))))
