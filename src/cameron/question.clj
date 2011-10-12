@@ -18,7 +18,7 @@
       (spit file (str/join "," (conj data \newline))))))
 
 (defn this-or-that [[this that]]
-  "Takes a vector with two choices (strings) and will only allow accept either choice as the answer."
+  "Takes a vector with two choices (strings) and will only accept either choice as the answer."
   (let [answer (str/lower-case (read-line))]
     (cond
      (= answer (str/lower-case this)) this
@@ -26,11 +26,14 @@
      :else (do (println (str "Please answer " this " or " that)) (recur [this that])))))
 
 (defn y-or-n []
-  "Return true on y, false on n. On any other answer, prompt for y or n."
-  (let [answer (read-line)]
+  "Return true on y, false on n. On most any other answer, prompt for y or n."
+  (let [answer (str/lower-case (read-line))]
     (cond
      (= answer "y") true
+     (= answer "yes") true
      (= answer "n") false
+     (= answer "no") false
+     (= answer "aw hell naw!") false
      :else (do (println "Please answer y or n") (recur)))))
 
 (defn input-scale [[min max]]
