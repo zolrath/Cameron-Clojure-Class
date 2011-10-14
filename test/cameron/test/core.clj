@@ -1,5 +1,5 @@
-(ns ucla.test.core
-  (:use [ucla.core])
+(ns cameron.test.core
+  (:use [cameron.core])
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write
