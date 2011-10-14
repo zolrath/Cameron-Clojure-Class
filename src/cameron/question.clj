@@ -33,7 +33,7 @@
 
 (defn y-or-n []
   "Return true on y__, false on n__. On most any other answer, prompt for y or n.
-   Will Smith Support added. Appends (y/n) to end of input string."
+   Will Smith Support added. Appends (y/n) to end of prompt."
   (print "(y/n) ") (flush)
   (loop []
     (let [answer (str/lower-case (read-line))]
@@ -44,7 +44,7 @@
        :else (do (print "Please answer y or n: ") (flush) (recur))))))
 
 (defn input-scale [[min max]]
-  "Takes a vector of minimum and maximum values (integers) of input. Appends (scale of min max) to input string."
+  "Takes a vector of minimum and maximum values (integers) of input. Appends (scale of min max) to prompt."
   (print (str "(scale of " min " to " max ") ")) (flush)
   (loop []
     (let [answer (try (Integer/parseInt (read-line)) (catch Exception e (dec min)))]
@@ -56,7 +56,7 @@
 (defn input-date []
   "Requires that the date be entered in a valid and standardized format.
    If user enters the word today it inputs todays date.
-   Appends (MM/DD/YYYY or today) to input string."
+   Appends (MM/DD/YYYY or today) to prompt."
   (print "(MM/DD/YYYY or today) ") (flush)
   (loop []
     (let [answer (read-line)
