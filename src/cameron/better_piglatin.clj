@@ -6,7 +6,7 @@
    appends that to the end of remaining string.
    Clojure =>  ojure+Cl = ojureCl"
   (let [pre-vowel  (re-find #"(?i)^[^aeiou]+(?=[aeiou])|^[^y]+" word)
-        post-vowel (re-find #"(?i)[aeiou]+|[y]+" word)]
+        post-vowel (re-find #"(?i)[aeiou].+|[y].+" word)]
     (str post-vowel pre-vowel)))
 
 (defn capitalize? [word]
@@ -26,7 +26,7 @@
 
 (defn pig-sentence [sentence]
   "Takes sentence and replaces only alpha characters and ' in place with its pig-latin translation."
-  (let [words (re-seq #"(?i)[a-z']+" sentence)]
+  (let [words (set (re-seq #"(?i)[a-z]+'?\w*" sentence))]
     (reduce #(str/replace % %2 (word-to-pig-latin %2)) sentence words)))
 
 (defn translate []
