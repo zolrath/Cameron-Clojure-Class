@@ -26,7 +26,7 @@
 
 (defn pig-sentence [sentence]
   "Takes sentence and replaces only alpha characters and ' in place with its pig-latin translation."
-  (let [words (set (re-seq #"(?i)[a-z]+'?\w*" sentence))]
+  (let [words (set (re-seq #"(?i)(?<=')[a-z]+(?=')|[a-z]+'?[a-z]*" sentence))]
     (reduce #(str/replace % %2 (word-to-pig-latin %2)) sentence words)))
 
 (defn translate []
