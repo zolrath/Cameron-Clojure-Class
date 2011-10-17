@@ -6,7 +6,7 @@
    appends that to the end of remaining string.
    Clojure =>  ojure+Cl = ojureCl"
   (let [pre-vowel  (re-find #"(?i)^[^aeiou]+(?=[aeiou])|^[^y]+" word)
-        post-vowel (re-find #"(?i)[aeiou].+|[y].+" word)]
+        post-vowel (re-find #"(?i)[aeiou].+|y(?!.+[aeiou]).+" word)]
     (str post-vowel pre-vowel)))
 
 (defn capitalize? [word]
