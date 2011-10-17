@@ -19,16 +19,19 @@
    :else identity))
 
 (defn start-punctuation? [word]
-  "If word starts with ( ) \" ? ! ; : , . return them."
-  (re-find #"^[()\"!?;:,.]+" word))
+  "Returns string containing all non-alphanumeric characters, aside from
+   single quotation mark('), before word."
+  (re-find #"(?i)^[^\w']+" word))
 
 (defn end-punctuation? [word]
-  "If word ends with ( ) \" ? ! ; : , . return them."
-  (re-find #"[()\"!?;:,.]+$" word))
+  "Returns string containing all non-alphanumeric characters, aside from
+   single quotation mark('),  after word."
+  (re-find #"(?i)[^\w']+$" word))
 
 (defn remove-punctuation [word]
-  "Return word with ( ) \" ? ! ; : , . removed."
-  (str/replace word #"[()\"!?;:,.]+" ""))
+  "Removes all non-alphanumeric characters, aside from single quotation
+   mark ('), from word."
+  (str/replace word #"(?i)[^\w']+" ""))
 
 (defn latin [word]
   "Return pig latin version of single word."
@@ -55,7 +58,7 @@
   "If word contins digit, return unmodified. If word has non-alpha or ' character
    split on given character."
   (let [no-vowels  (nil? (re-find #"(?i)[aeiouy]" word))
-        has-digits (re-find #"\d+" word)
+        has-digits (re-find #"^\d+" word)
         separator  (re-find #"(?i)[^a-z](?=[a-z])" word)]
     (cond
        no-vowels word
